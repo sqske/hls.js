@@ -82,6 +82,13 @@ export function findFragmentBySN (fragPrevious, fragments, bufferEnd, end, maxFr
   return foundFrag;
 }
 
+/**
+ * The test function used by the findFragmentBySn's BinarySearch to look for the best match to the current buffer conditions.
+ * @param {*} candidate - The fragment to test
+ * @param {number} bufferEnd - The end of the current buffered range the playhead is currently within
+ * @param {number} maxFragLookUpTolerance - The amount of time that a fragment's start can be within in order to be considered contiguous
+ * @returns {number} - 0 if it matches, 1 if too low, -1 if too high
+ */
 export function fragmentWithinToleranceTest (candidate, bufferEnd, maxFragLookUpTolerance) {
   // offset should be within fragment boundary - config.maxFragLookUpTolerance
   // this is to cope with situations like
