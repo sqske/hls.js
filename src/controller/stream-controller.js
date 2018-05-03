@@ -15,7 +15,7 @@ import { ErrorTypes, ErrorDetails } from '../errors';
 import { logger } from '../utils/logger';
 import { alignDiscontinuities } from '../utils/discontinuities';
 import TaskLoop from '../task-loop';
-import { calculateNextPdt, findFragmentByPDT, findFragmentBySN } from 'fragment-finders';
+import { calculateNextPDT, findFragmentByPDT, findFragmentBySN } from './fragment-finders';
 
 export const State = {
   STOPPED: 'STOPPED',
@@ -393,10 +393,10 @@ class StreamController extends TaskLoop {
 
     if (bufferEnd < end) {
       if (!levelDetails.programDateTime) { // Uses buffer and sequence number to calculate switch segment (required if using EXT-X-DISCONTINUITY-SEQUENCE)
-        foundFrag = findFragmentBySN(fragPrevious, fragments, bufferEnd, end);
+        foundFrag = findFragmentBySN(fragPrevious, fragments, bufferEnd, end, config.maxFragLookUpTolerance);
       } else {
         // Relies on PDT in order to switch bitrates (Support EXT-X-DISCONTINUITY without EXT-X-DISCONTINUITY-SEQUENCE)
-        foundFrag = findFragmentByPDT(fragments, calculateNextPdt(start, bufferEnd, fragPrevious, levelDetails));
+        foundFrag = findFragmentByPDT(fragments, calculateNextPDT(start, bufferEnd, fragPrevious, levelDetails));
       }
     } else {
       // reach end of playlist
